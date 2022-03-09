@@ -96,6 +96,8 @@ public class App {
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub
+        // OPTIONAL!
+
 		
 	}
 
@@ -106,6 +108,7 @@ public class App {
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub
+        // OPTIONAL!
 		
 	}
 
