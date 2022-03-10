@@ -15,14 +15,19 @@ public class JdbcAccountDao implements AccountDao{
     }
 
     @Override
-    public BigDecimal getBalance(int user_id, int account_id) {
+    public BigDecimal getBalance(int user_id) {
         String sql = "select balance from account where user_id = ?;";
-        BigDecimal balance = jdbcTemplate.queryForObject(sql,BigDecimal.class, user_id);
+        BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, user_id);
         return balance;
     }
 
     @Override
-    public void transferFunds(int sender_id, int receiver_id, BigDecimal amount) {
+    public void updateBalance(int userId, int receiverId, BigDecimal transferAmount) {
+        String sql = "UPDATE account SET balance = balance - ? WHERE user_id = ?;";
+        jdbcTemplate.update(sql, transferAmount, userId);
 
+        String sql2 = "UPDATE account SET balance = balance + ? WHERE user_id = ?;";
+        jdbcTemplate.update(sql2, transferAmount, receiverId);
     }
+
 }
