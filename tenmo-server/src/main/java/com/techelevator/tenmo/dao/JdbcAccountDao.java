@@ -22,12 +22,16 @@ public class JdbcAccountDao implements AccountDao{
     }
 
     @Override
-    public void updateBalance(int userId, int receiverId, BigDecimal transferAmount) {
+    public void updateBalance(int typeId, int statusId, int userId, int receiverId, BigDecimal transferAmount) {
         String sql = "UPDATE account SET balance = balance - ? WHERE user_id = ?;";
         jdbcTemplate.update(sql, transferAmount, userId);
 
         String sql2 = "UPDATE account SET balance = balance + ? WHERE user_id = ?;";
         jdbcTemplate.update(sql2, transferAmount, receiverId);
+
+        String sql3 = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+                        "VALUES (?, ?, ?, ?, ?); RETURNING transfer_id";
+        jdbcTemplate.update(sql3, typeId, statusId, userId, receiverId, transferAmount);
     }
 
 }

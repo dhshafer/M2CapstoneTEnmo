@@ -3,6 +3,7 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,21 +36,18 @@ public class AccountController {
         return accountDao.getBalance(userId);
     }
 
-    @RequestMapping(path = "/details", method = RequestMethod.GET)
-    public Account getDetails(Principal principal){
-//      Go to database to fetch stuff
-        Account account = new Account(BigDecimal.valueOf(100.00), 5, 6);
-        return account;
-    }
+//    @RequestMapping(path = "/details", method = RequestMethod.GET)
+//    public Account getDetails(Principal principal){
+////      Go to database to fetch stuff
+//        Account account = new Account(BigDecimal.valueOf(100.00), 5, 6);
+//        return account;
+//    }
 
-    @RequestMapping(path = "/transfer", method = RequestMethod.PUT)
-    public void transferMoney(@RequestBody int receiverId, BigDecimal transferAmount, Principal principal){
+    @RequestMapping(path = "/transfer", method = RequestMethod.POST)
+    public void transferMoney(@RequestBody Transfer transfer, Principal principal){
         int userId = userDao.findIdByUsername(principal.getName());
-        accountDao.updateBalance(userId, receiverId, transferAmount);
-        // as "POST", combine receiverId and transferAmount into object, see "login" inside AuthenticationController
-
-//        Create new Model "Transfer" that contains receiver and transferAmount
-//
+        accountDao.updateBalance(transfer.getTypeId(), transfer.getStatusId(), userId, transfer.getReceiverId(), transfer.getTransferAmount());
     }
+
 
 }

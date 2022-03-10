@@ -6,5 +6,5 @@ public interface AccountDao {
 
     BigDecimal getBalance(int account_id);
 
-    void updateBalance(int userId, int receiverId, BigDecimal transferAmount);
+    void updateBalance(int typeId, int statusId, int userId, int receiverId, BigDecimal transferAmount);
 }
