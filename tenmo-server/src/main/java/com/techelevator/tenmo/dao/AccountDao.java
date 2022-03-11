@@ -12,4 +12,6 @@ public interface AccountDao {
     void updateBalance(String type, String status, int userId, int receiverId, BigDecimal transferAmount);
 
     List<Transfer> getTransfers(int user_id);
+
+    Transfer getTransferById(int transferId);
 }

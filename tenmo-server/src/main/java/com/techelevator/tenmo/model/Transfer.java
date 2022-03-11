@@ -4,10 +4,18 @@ import java.math.BigDecimal;
 
 public class Transfer {
 
+    private int transferId;
     private String type;
     private String status;
     private int receiverId;
     private BigDecimal transferAmount;
+
+    public int getTransferId() {
+        return transferId;
+    }
+    public void setTransferId(int transferId) {
+        this.transferId = transferId;
+    }
 
     public String getType() {
         return type;
