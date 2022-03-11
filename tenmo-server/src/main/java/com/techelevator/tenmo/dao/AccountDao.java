@@ -1,10 +1,15 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Transfer;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface AccountDao {
 
     BigDecimal getBalance(int account_id);
 
-    void updateBalance(int typeId, int statusId, int userId, int receiverId, BigDecimal transferAmount);
+    void updateBalance(String type, String status, int userId, int receiverId, BigDecimal transferAmount);
+
+    List<Transfer> getTransfers(int user_id);
 }

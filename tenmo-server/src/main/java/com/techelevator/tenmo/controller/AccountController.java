@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/account")
@@ -46,8 +48,16 @@ public class AccountController {
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public void transferMoney(@RequestBody Transfer transfer, Principal principal){
         int userId = userDao.findIdByUsername(principal.getName());
-        accountDao.updateBalance(transfer.getTypeId(), transfer.getStatusId(), userId, transfer.getReceiverId(), transfer.getTransferAmount());
+
+        accountDao.updateBalance(transfer.getType(), transfer.getStatus(), userId, transfer.getReceiverId(), transfer.getTransferAmount());
     }
 
+    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
+    public List<Transfer> getTransfers(Principal principal){
+        int userId = userDao.findIdByUsername(principal.getName());
+        List<Transfer> listOfTransfers = new ArrayList<>();
+        listOfTransfers = accountDao.getTransfers(userId);
+        return listOfTransfers;
+    }
 
 }

@@ -1,9 +1,13 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class JdbcAccountDao implements AccountDao{
@@ -22,16 +26,53 @@ public class JdbcAccountDao implements AccountDao{
     }
 
     @Override
-    public void updateBalance(int typeId, int statusId, int userId, int receiverId, BigDecimal transferAmount) {
+    public void updateBalance(String typeId, String statusId, int userId, int receiverId, BigDecimal transferAmount) {
         String sql = "UPDATE account SET balance = balance - ? WHERE user_id = ?;";
         jdbcTemplate.update(sql, transferAmount, userId);
 
         String sql2 = "UPDATE account SET balance = balance + ? WHERE user_id = ?;";
         jdbcTemplate.update(sql2, transferAmount, receiverId);
 
+//        String sql3 = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+//                        "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";
+//        int transferId = jdbcTemplate.update(sql3, typeId, statusId, userId, receiverId, transferAmount);
         String sql3 = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-                        "VALUES (?, ?, ?, ?, ?); RETURNING transfer_id";
-        jdbcTemplate.update(sql3, typeId, statusId, userId, receiverId, transferAmount);
+                " VALUES ((select transfer_type_id from transfer_type where transfer_type_desc = ?), " +
+                "(select transfer_status_id from transfer_status where transfer_status_desc = ?), " +
+                "(select account_id from account where user_id = ?), "+
+                "(select account_id from account where user_id = ?), ?); ";
+        int transferId = jdbcTemplate.update(sql3, typeId, statusId, userId, receiverId, transferAmount);
+
+        // SELECT
     }
+
+    @Override
+    public List<Transfer> getTransfers(int user_id) {
+//        String sql = "select transfer_type_id, transfer_status_id, account_to, amount from transfer \n" +
+//                "where account_from = (select account_id from account where user_id = ?)";
+        String sql = "select transfer_type_desc, transfer_status_desc, user_id, amount from transfer\n" +
+                "join transfer_type on transfer.transfer_type_id = transfer_type.transfer_type_id\n" +
+                "join transfer_status on transfer.transfer_status_id = transfer_status.transfer_status_id\n" +
+                "join account on transfer.account_from = account.account_id\n" +
+                "where account_from = (select account_id from account where user_id = ?)";
+        List<Transfer> listOfTransfers = new ArrayList<>();
+        //listOfTransfers = jdbcTemplate.queryForList(sql, Transfer.class, user_id);
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, user_id);
+        while(result.next()){
+            Transfer transfer = mapRowToTransfer(result);
+            listOfTransfers.add(transfer);
+        }
+        return listOfTransfers;
+    }
+
+    private Transfer mapRowToTransfer(SqlRowSet rs) {
+        Transfer transfer = new Transfer();
+        transfer.setType(rs.getString("transfer_type_desc"));
+        transfer.setStatus(rs.getString(("transfer_status_desc")));
+        transfer.setReceiverId(rs.getInt("user_id"));
+        transfer.setTransferAmount(rs.getBigDecimal("amount"));
+        return transfer;
+    }
+
 
 }
