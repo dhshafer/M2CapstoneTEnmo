@@ -1,0 +1,5 @@
+2022-03-12T17:32:23.7031699 500 : [{"timestamp":"2022-03-12T23:32:23.678+00:00","status":500,"error":"Internal Server Error","message":"No message available","path":"/account"}]
+2022-03-12T17:36:12.1706572 500 : [{"timestamp":"2022-03-12T23:36:12.148+00:00","status":500,"error":"Internal Server Error","message":"No message available","path":"/account"}]
+2022-03-12T17:39:20.9860345 401 : [no body]
+2022-03-12T17:40:33.6424491 500 : [{"timestamp":"2022-03-12T23:40:33.612+00:00","status":500,"error":"Internal Server Error","message":"No message available","path":"/account"}]
+2022-03-12T18:43:52.8737906 500 : [{"timestamp":"2022-03-13T00:43:52.853+00:00","status":500,"error":"Internal Server Error","message":"PreparedStatementCallback; SQL [INSERT INTO transfer (transfer_type_id, transfer_status_id, account... (889 bytes)]

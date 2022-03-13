@@ -1,9 +1,15 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.math.BigDecimal;
 
 public class App {
 
@@ -11,6 +17,7 @@ public class App {
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
+    private AccountService accountService = new AccountService();
 
     private AuthenticatedUser currentUser;
 
@@ -55,9 +62,14 @@ public class App {
     private void handleLogin() {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
-        if (currentUser == null) {
+        if (currentUser.getToken() != null) {
+            accountService.setAuthToken(currentUser.getToken());
+        } else {
             consoleService.printErrorMessage();
         }
+//        if (currentUser == null) {
+//            consoleService.printErrorMessage();
+//        }
     }
 
     private void mainMenu() {
@@ -85,8 +97,15 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
-		
+        BigDecimal balance = accountService.viewCurrentBalance();
+        if (balance != null) {
+            consoleService.printBalance(balance);
+        } else {
+            consoleService.printErrorMessage();
+        }
+
+
+
 	}
 
 	private void viewTransferHistory() {
@@ -102,8 +121,14 @@ public class App {
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
-		
+		Transfer transferEnteredByUser = consoleService.promptForTransfer();
+        accountService.transfer(transferEnteredByUser);
+//        Transfer transferFromApi = accountService.transfer(transferEnteredByUser);
+//        if (transferFromApi == null) {
+//            consoleService.printErrorMessage();
+//        } else {
+//            System.out.printf("SUCCESS WOOO");
+//        }
 	}
 
 	private void requestBucks() {

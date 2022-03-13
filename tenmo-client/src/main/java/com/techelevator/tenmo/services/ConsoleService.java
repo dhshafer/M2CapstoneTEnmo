@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 
 import java.math.BigDecimal;
@@ -86,6 +87,32 @@ public class ConsoleService {
 
     public void printErrorMessage() {
         System.out.println("An error occurred. Check the log for details.");
+    }
+
+
+    public void printBalance(BigDecimal balance) {
+        System.out.println("Your current account balance is: $" + balance);
+    }
+
+    public Transfer promptForTransfer(){
+        Transfer transfer = new Transfer();
+        System.out.println(
+                "-------------------------------------------\n" +
+                "Users\n" +
+                "ID         Name\n" +
+                "-------------------------------------------\n" +
+                "1004       asdf\n" +
+                "1005       jkl\n" +
+                "---------\n" +
+                "\n" +
+                "Enter ID of user you are sending to (0 to cancel): \n"
+        );
+        transfer.setReceiverId(scanner.nextInt());
+
+        System.out.println("Enter amount: ");
+        transfer.setTransferAmount(scanner.nextBigDecimal());
+
+        return transfer;
     }
 
 }
