@@ -62,14 +62,13 @@ public class App {
     private void handleLogin() {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
+
+//        Added to use in AccountService to set login token, used in header
         if (currentUser.getToken() != null) {
             accountService.setAuthToken(currentUser.getToken());
         } else {
             consoleService.printErrorMessage();
         }
-//        if (currentUser == null) {
-//            consoleService.printErrorMessage();
-//        }
     }
 
     private void mainMenu() {

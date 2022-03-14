@@ -1,0 +1,3 @@
+2022-03-14T13:27:38.6451708 401 : [no body]
+2022-03-14T13:28:50.9172185 500 : [{"timestamp":"2022-03-14T18:28:50.897+00:00","status":500,"error":"Internal Server Error","message":"PreparedStatementCallback; SQL [INSERT INTO transfer (transfer_type_id, transfer_status_id, account... (885 bytes)]
+2022-03-14T14:20:01.6427215 401 : [no body]

@@ -4,6 +4,7 @@ import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class JdbcAccountDao implements AccountDao{
         return balance;
     }
 
+    @Transactional
     @Override
     public void updateBalance(String typeId, String statusId, int userId, int receiverId, BigDecimal transferAmount) {
         String sql = "UPDATE account SET balance = balance - ? WHERE user_id = ?;";
@@ -33,9 +35,6 @@ public class JdbcAccountDao implements AccountDao{
         String sql2 = "UPDATE account SET balance = balance + ? WHERE user_id = ?;";
         jdbcTemplate.update(sql2, transferAmount, receiverId);
 
-//        String sql3 = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-//                        "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";
-//        int transferId = jdbcTemplate.update(sql3, typeId, statusId, userId, receiverId, transferAmount);
         String sql3 = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
                 " VALUES ((select transfer_type_id from transfer_type where transfer_type_desc = ?), " +
                 "(select transfer_status_id from transfer_status where transfer_status_desc = ?), " +

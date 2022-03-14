@@ -28,7 +28,6 @@ public class AccountService {
             ResponseEntity<BigDecimal> response = restTemplate.exchange(API_BASE_URL, HttpMethod.GET,
                     makeAuthEntity(), BigDecimal.class);
             balance = response.getBody();
-            System.out.println(balance);
         } catch (Exception e) {
             BasicLogger.log(e.getMessage());
         }
@@ -46,6 +45,7 @@ public class AccountService {
         return returnTransfer;
     }
 
+    // Post
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -53,6 +53,7 @@ public class AccountService {
         return new HttpEntity<>(transfer, headers);
     }
 
+    // Get
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
